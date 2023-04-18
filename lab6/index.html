@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>圈圈叉叉遊戲</title>
+    <style>
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            width: 300px;
+            margin: 0 auto;
+        }
+
+        .grid-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 48px;
+            height: 100px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+        #message {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid">
+        <div class="grid-item" onclick="makeMove(0)"></div>
+        <div class="grid-item" onclick="makeMove(1)"></div>
+        <div class="grid-item" onclick="makeMove(2)"></div>
+        <div class="grid-item" onclick="makeMove(3)"></div>
+        <div class="grid-item" onclick="makeMove(4)"></div>
+        <div class="grid-item" onclick="makeMove(5)"></div>
+        <div class="grid-item" onclick="makeMove(6)"></div>
+        <div class="grid-item" onclick="makeMove(7)"></div>
+        <div class="grid-item" onclick="makeMove(8)"></div>
+    </div>
+    <div id="message"></div>
+
+    <script>
+        let currentPlayer = "X";
+        let board = ["", "", "", "", "", "", "", "", ""];
+        let gameEnded = false;
+
+        function makeMove(index) {
+            if (!gameEnded && board[index] === "") {
+                board[index] = currentPlayer;
+                document.getElementsByClassName("grid-item")[index].innerText = currentPlayer;
+                document.getElementsByClassName("grid-item")[index].style.cursor = "default";
+                document.getElementsByClassName("grid-item")[index].removeAttribute("onclick");
+                checkWin();
+                currentPlayer = currentPlayer === "X" ? "O" : "X";
+            }
+        }
+
+        function checkWin() {
+            const winningCombinations = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8], // 橫線
+                [0, 3, 6], [1, 4, 7], [2, 5, 8], // 直線
+                [0, 4, 8], [2, 4, 6]             // 對角線
+            ];
+
+            for (let combination of winningCombinations) {
+                if (board[combination[0]] === board[combination[1]] && board[combination[1]] === board[combination[2]] && board[combination[0]] !== "") {
+                    gameEnded = true;
+                    document.getElementById("message").innerText = "玩家 " + board[combination[0]] + " 贏了!";
+                    playVideo(board[combination[0]] === "X" ? "SwZMS-ISbH4" : "Hlp8XD0R5qo");
+break;
+}
+}
+if (!board.includes("") && !gameEnded) {
+            gameEnded = true;
+            document.getElementById("message").innerText = "平手!";
+            playVideo("DDO_aCkivxU");
+        }
+    }
+
+    function playVideo(videoId) {
+        let videoElement = document.createElement("iframe");
+        videoElement.width = "560";
+        videoElement.height = "315";
+        videoElement.src = "https://www.youtube.com/embed/" + videoId;
+        videoElement.allow = "autoplay";
+        videoElement.style.display = "none";
+        document.body.appendChild(videoElement);
+        videoElement.onload = function() {
+            videoElement.style.display = "block";
+            videoElement.contentWindow.document.querySelector("body").click();
+        };
+    }
+</script>
+</body>
+</html>
